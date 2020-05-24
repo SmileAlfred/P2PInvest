@@ -1,0 +1,3 @@
+rootProject.name='P2PInvest'
+include ':app', ':activitydemo', ':ViewPagerIndicator_library'
+include ':randomlayoutdemo'

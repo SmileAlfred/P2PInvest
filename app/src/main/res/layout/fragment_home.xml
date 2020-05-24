@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:roundprogress="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title"></include>
+
+    <com.example.p2pinvest.ui.MyScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="230dp">
+
+                <!--<androidx.viewpager.widget.ViewPager
+                    android:id="@+id/vp_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <com.viewpagerindicator.CirclePageIndicator
+                    android:id="@+id/cp_home_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_marginBottom="5dp" />-->
+
+                <com.youth.banner.Banner
+                    android:id="@+id/banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:indicator_height="12dp"
+                    app:indicator_margin="8dp"
+                    app:indicator_width="12dp"
+                    app:title_textsize="16sp" />
+
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_home_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:drawableRight="@drawable/recommend"
+                android:drawablePadding="4dp"
+                android:text="硅谷堂180计划第一期"
+                android:textColor="@color/product_detail_common"
+                android:textSize="30sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/home_attribute_bg"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="本息保障"
+                    android:textColor="@color/home_back_unselected" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/home_attribute_bg"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="每日计息"
+                    android:textColor="@color/home_back_unselected" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/home_attribute_bg"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="高额收益"
+                    android:textColor="@color/home_back_unselected" />
+
+
+            </LinearLayout>
+
+
+            <com.example.p2pinvest.ui.RoundProgress
+                android:id="@+id/roundPro_home"
+                roundprogress:max="100"
+                roundprogress:progress="70"
+                roundprogress:roundColor="@color/product_detail_common"
+                roundprogress:roundProgressColor="@color/round_red_common"
+                roundprogress:roundWith="10dp"
+                roundprogress:textColor="@color/title_back"
+                roundprogress:textSize="20dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="10dp" />
+            <!-- <Button
+                 android:layout_width="150dp"
+                 android:layout_height="150dp"
+                 android:layout_marginTop="10dp"
+                 android:text="我是圆形进度条" />-->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="预期年利率："
+                    android:textColor="@color/product_detail_common"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_home_yearrate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10% + 2%"
+                    android:textColor="@color/product_detail_common"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/home"
+                android:text="立即加入"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/guarantee_icon"
+                android:text="风险保障金由硅谷银行监管"
+                android:textColor="@color/home_back_unselected" />
+
+        </LinearLayout>
+
+
+    </com.example.p2pinvest.ui.MyScrollView>
+
+</LinearLayout>
