@@ -34,7 +34,7 @@ public class ProductRecommondFragment extends BaseFragment {
             "CSDN粉丝12",
             "大学老师购买车辆",
             "天气热",
-            "美人鱼影视拍摄投资",
+            "美人鱼影视拍摄投资" ,
             "Android培训老师自己周转",
             "开斋节",
             "北京代表团",

@@ -7,7 +7,9 @@ import com.example.p2pinvest.common.BaseFragment;
 import com.loopj.android.http.RequestParams;
 
 /**
- * Created by shkstart on 2016/12/5 0005.
+ *
+ * @author shkstart
+ * @date 2016/12/5 0005
  */
 public class ProductHotFragment extends BaseFragment {
     @Override
