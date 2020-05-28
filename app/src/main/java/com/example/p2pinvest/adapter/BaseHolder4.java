@@ -3,19 +3,19 @@ package com.example.p2pinvest.adapter;
 import android.view.View;
 
 /**
- *通用：拿去BaseHolder.java，MyBaseAdapter3.java，重写MyHolder.java，.ProductAdapter3java
- * @author shkstart
- * @date 2016/12/5 0005
+ * @author LiuSaiSai
+ * @description:
+ * @date :2020/05/28 13:11
  */
-public abstract class BaseHolder<T> {
+public abstract class BaseHolder4<T> {
     private View rootView;
 
     private T data;
 
-    public BaseHolder(){
+    public BaseHolder4(){
         rootView = initView();
         rootView.setTag(this);
-        findViews(initView());
+        findViews(rootView);
     }
 
     protected abstract void findViews(View view);

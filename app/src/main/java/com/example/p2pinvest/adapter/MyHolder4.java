@@ -9,17 +9,19 @@ import com.example.p2pinvest.ui.RoundProgress;
 import com.example.p2pinvest.util.UIUtils;
 
 /**
- * Created by shkstart on 2016/12/5 0005.
- * 通用：拿去BaseHolder.java，MyBaseAdapter3.java，重写MyHolder.java，.ProductAdapter3java
+ * @author LiuSaiSai
+ * @description:
+ * @date :2020/05/28 13:13
  */
-public class MyHolder extends BaseHolder<Product> {
-    private TextView pName;
-    private TextView pMoney;
-    private TextView pYearlv;
-    private TextView pSuodingdays;
-    private TextView pMinzouzi;
-    private TextView pMinnum;
-    private RoundProgress pProgresss;
+public class MyHolder4 extends BaseHolder4<Product> {
+
+   private TextView pName;
+   private TextView pMoney;
+   private TextView pYearlv;
+   private TextView pSuodingdays;
+   private TextView pMinzouzi;
+   private TextView pMinnum;
+   private RoundProgress pProgresss;
 
 
     @Override
@@ -50,5 +52,6 @@ public class MyHolder extends BaseHolder<Product> {
         pProgresss.setProgress(Integer.parseInt(data.progress));
         pSuodingdays.setText(data.suodingDays);
         pYearlv.setText(data.yearRate);
+
     }
 }

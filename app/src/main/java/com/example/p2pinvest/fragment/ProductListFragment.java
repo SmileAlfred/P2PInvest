@@ -1,5 +1,6 @@
 package com.example.p2pinvest.fragment;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -7,10 +8,8 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.p2pinvest.R;
-import com.example.p2pinvest.adapter.ProductAdapter;
-import com.example.p2pinvest.adapter.ProductAdapter1;
 import com.example.p2pinvest.adapter.ProductAdapter2;
-import com.example.p2pinvest.adapter.ProductAdapter3;
+import com.example.p2pinvest.adapter.ProductAdapter4;
 import com.example.p2pinvest.bean.Product;
 import com.example.p2pinvest.common.AppNetConfig;
 import com.example.p2pinvest.common.BaseFragment;
@@ -52,7 +51,7 @@ public class ProductListFragment extends BaseFragment {
             String data = jsonObject.getString("data");
             //获取集合数据
             productList = JSON.parseArray(data, Product.class);
-
+            Log.i("TAG", ProductListFragment.class.getSimpleName() + " + initData: " + productList);
             //方式一：没有抽取
             //ProductAdapter productAdapter = new ProductAdapter(productList);
             //lvProductList.setAdapter(productAdapter);//显示列表
@@ -66,9 +65,9 @@ public class ProductListFragment extends BaseFragment {
             //lvProductList.setAdapter(productAdapter2);//显示列表
 
             //方式四：抽取了，最好的方式.（可以作为选择）
-            //通用：拿去BaseHolder.java，MyBaseAdapter3.java，重写MyHolder.java，.ProductAdapter3java
-            ProductAdapter3 productAdapter3 = new ProductAdapter3(productList);
-            lvProductList.setAdapter(productAdapter3);//显示列表
+            //通用：拿去BaseHolder4.java，MyBaseAdapter4.java，重写MyHolder4.java，ProductAdapter4java
+            ProductAdapter4 productAdapter4 = new ProductAdapter4(productList);
+            lvProductList.setAdapter(productAdapter4);//显示列表
         }
     }
 

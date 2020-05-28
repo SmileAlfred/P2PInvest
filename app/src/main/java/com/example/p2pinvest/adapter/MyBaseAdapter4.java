@@ -7,13 +7,16 @@ import android.widget.BaseAdapter;
 import java.util.List;
 
 /**
- * Created by shkstart on 2016/12/5 0005.
+ * @author LiuSaiSai
+ * @description:
+ * @date :2020/05/28 13:09
  */
-public abstract class MyBaseAdapter3<T> extends BaseAdapter {
+public abstract class MyBaseAdapter4<T> extends BaseAdapter {
 
     public List<T> list;
+
     //通过构造器初始化集合数据
-    public MyBaseAdapter3(List<T> list) {
+    public MyBaseAdapter4(List<T> list) {
         this.list = list;
     }
 
@@ -37,11 +40,11 @@ public abstract class MyBaseAdapter3<T> extends BaseAdapter {
     //问题二：将集合中指定位置的数据装配到item，是不确定的。
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        BaseHolder<T> holder;
-        if(convertView == null){
+        BaseHolder4<T> holder;
+        if (convertView == null) {
             holder = getHolder();
-        }else{
-            holder = (BaseHolder<T>) convertView.getTag();
+        } else {
+            holder = (BaseHolder4<T>) convertView.getTag();
         }
 
         //装配数据
@@ -51,7 +54,6 @@ public abstract class MyBaseAdapter3<T> extends BaseAdapter {
         return holder.getRootView();
     }
 
-    protected abstract BaseHolder<T> getHolder();
-
-
+    protected abstract BaseHolder4<T> getHolder();
 }
+

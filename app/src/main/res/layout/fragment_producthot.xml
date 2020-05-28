@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/holo_blue_light">
 
-        <TextView
+        <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="你是我心内的一首歌"
@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:text="夜曲"
         android:layout_margin="10dp"
-        android:textSize="20sp" />
+        android:textSize="20sp" />-->
 
 
     </com.example.p2pinvest.ui.FlowLayout>

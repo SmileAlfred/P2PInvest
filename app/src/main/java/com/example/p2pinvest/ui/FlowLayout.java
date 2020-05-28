@@ -36,9 +36,8 @@ public class FlowLayout extends ViewGroup {
     //能够设置当前布局的宽度和高度
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //获取设置的宽高的模式和具体的值
-        init();
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -99,7 +98,6 @@ public class FlowLayout extends ViewGroup {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         //一、给两个集合添加元素。
-        init();
         //每一行的宽高值
         int lineWidth = 0;
         int lineHeight = 0;

@@ -18,12 +18,13 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.p2pinvest.R;
 import com.example.p2pinvest.common.ActivityManager;
+import com.example.p2pinvest.common.BaseActivity;
 import com.example.p2pinvest.fragment.HomeFragment;
 import com.example.p2pinvest.fragment.InvestFragment;
 import com.example.p2pinvest.fragment.MeFragment;
 import com.example.p2pinvest.fragment.MoreFragment;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private FragmentTransaction transaction;
     private FrameLayout flMain;
@@ -47,17 +48,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public final String TAG = MainActivity.this.getClass().getSimpleName();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //将当前的activity添加到ActivityManager中
-        ActivityManager.getInstance().add(this);
-        findViews();
-        //默认显示首页
-        setSelect(0);
-    }
-
-    private void findViews() {
+    public void findViews() {
         flMain = findViewById(R.id.fl_main);
         ivMainHome = findViewById(R.id.iv_main_home);
         tvMainHome = findViewById(R.id.tv_main_home);
@@ -76,6 +67,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         llMainInvest.setOnClickListener(this);
         llMainMe.setOnClickListener(this);
         llMainMore.setOnClickListener(this);
+    }
+
+    @Override
+    protected void initData() {
+        //默认显示首页
+        setSelect(0);
+    }
+
+    @Override
+    protected void initTitle() {
+
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
     }
 
     @Override

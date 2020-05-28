@@ -28,7 +28,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="超级新手计划"
+                android:text="默认：超级新手计划"
                 android:textColor="#333333"
                 android:textSize="16sp"/>
 
@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="left"
-                    android:text="产品金额"
+                    android:text="默认：产品金额"
                     android:textColor="@color/product_detail_common"
                     android:textSize="12sp"/>
 
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="预期年利率"
+                    android:text="默认：预期年利率"
                     android:textColor="@color/product_detail_common"
                     android:textSize="12sp"/>
 
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="锁定期"
+                    android:text="默认：锁定期"
                     android:textColor="@color/product_detail_common"
                     android:textSize="12sp"/>
             </LinearLayout>
@@ -112,7 +112,7 @@
                         android:id="@+id/p_money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="10"
+                        android:text="默认：10"
                         android:textColor="@color/product_red_common"
                         android:textSize="14sp"
                         android:textStyle="bold"/>
@@ -135,7 +135,7 @@
                         android:id="@+id/p_yearlv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8.00"
+                        android:text="默认：8.00"
                         android:textColor="@color/product_red_common"
                         android:textSize="14sp"
                         android:textStyle="bold"/>
@@ -158,7 +158,7 @@
                         android:id="@+id/p_suodingdays"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="30"
+                        android:text="默认：30"
                         android:textColor="@color/product_red_common"
                         android:textSize="14sp"
                         android:textStyle="bold"/>
@@ -196,7 +196,7 @@
                         android:layout_marginLeft="4dp"
                         android:drawableLeft="@drawable/manage_list_count"
                         android:drawablePadding="4dp"
-                        android:text="100起"
+                        android:text="默认：100起"
                         android:textColor="@color/product_detail_common"
                         android:textSize="12sp"/>
                 </LinearLayout>
@@ -218,7 +218,7 @@
                         android:layout_marginLeft="4dp"
                         android:drawableLeft="@drawable/manage_list_guarantee"
                         android:drawablePadding="4dp"
-                        android:text="本息保障"
+                        android:text="默认：本息保障"
                         android:textColor="@color/product_detail_common"
                         android:textSize="12sp"/>
                 </LinearLayout>
@@ -241,7 +241,7 @@
                         android:layout_marginLeft="4dp"
                         android:drawableLeft="@drawable/manage_list_member"
                         android:drawablePadding="4dp"
-                        android:text="100"
+                        android:text="默认：100"
                         android:textColor="@color/product_detail_common"
                         android:textSize="12sp"/>
                 </LinearLayout>
