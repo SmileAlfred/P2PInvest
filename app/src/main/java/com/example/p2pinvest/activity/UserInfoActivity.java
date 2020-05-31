@@ -1,12 +1,15 @@
 package com.example.p2pinvest.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +24,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.p2pinvest.R;
 import com.example.p2pinvest.common.BaseActivity;
@@ -86,15 +94,21 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0://图库
-                                        //UIUtils.toast("图库", false);
                                         //启动其他应用的activity:使用隐式意图
-                                        Intent picture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                        startActivityForResult(picture, PICTURE);
+                                        if (ContextCompat.checkSelfPermission(UserInfoActivity.this
+                                                , Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                                != PackageManager.PERMISSION_GRANTED) {
+                                            ActivityCompat.requestPermissions(UserInfoActivity.this
+                                                    , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICTURE);
+                                        } else {
+                                            openAlbum();
+                                        }
                                         break;
                                     case 1://相机
-                                        //UIUtils.toast("相机", false);
-                                        Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                        Intent camera = new Intent("android.intent.action.GET_CONTENT");
                                         startActivityForResult(camera, CAMERA);
+                                        break;
+                                    default:
                                         break;
                                 }
                             }
@@ -106,13 +120,14 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 //"退出登录"button的回调方法
                 //1.将保存在sp中的数据清除
                 SharedPreferences sp = this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
-                sp.edit().clear().commit();//清除数据操作必须提交；提交以后，文件仍存在，只是文件中的数据被清除了
+                //清除数据操作必须提交；提交以后，文件仍存在，只是文件中的数据被清除了
+                sp.edit().clear().commit();
                 //2.将本地保存的图片的file删除
                 File filesDir;
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {//判断sd卡是否挂载
+                //判断sd卡是否挂载
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                     //路径1：storage/sdcard/Android/data/包名/files
                     filesDir = this.getExternalFilesDir("");
-
                 } else {//手机内部存储
                     //路径：data/data/包名/files
                     filesDir = this.getFilesDir();
@@ -126,10 +141,44 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 this.removeAll();
                 //4.重新进入首页面
                 this.goToActivity(MainActivity.class, null);
-                    break;
+                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 请求权限 方法
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PICTURE:
+                /**
+                 * 解决 打开相册 请求
+                 */
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openAlbum();
+                } else {
+                    Toast.makeText(UserInfoActivity.this, "You denied the permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+        }
+    }
+
+    /**
+     * 打开相册
+     */
+    private void openAlbum() {
+        Intent intent = new Intent("android.intent.action.GET_CONTENT");
+        /**
+         * 设置意图类型：
+         * intent.setType("image/*")        表示读取相册照片
+         * intent.setType("text/plain");    表示调用手机默认分享
+         */
+        intent.setType("image/*");
+        startActivityForResult(intent, PICTURE);
     }
 
     @Override
@@ -160,28 +209,75 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
 
             //图库
         } else if (requestCode == PICTURE && resultCode == RESULT_OK && data != null) {
+            if (Build.VERSION.SDK_INT >= 19) {
+                handleImageOnKitKat(data);
+            } else {
+                handleImageBeforeKitKat(data);
+            }
+        }
+    }
 
-            //图库
-            Uri selectedImage = data.getData();
-            //android各个不同的系统版本,对于获取外部存储上的资源，返回的Uri对象都可能各不一样,
-            // 所以要保证无论是哪个系统版本都能正确获取到图片资源的话就需要针对各种情况进行一个处理了
-            //这里返回的uri情况就有点多了
-            //在4.4.2之前返回的uri是:content://media/external/images/media/3951或者file://....
-            // 在4.4.2返回的是content://com.android.providers.media.documents/document/image
+    /**
+     * Android4.4 版本之后，相册图片不再返回真实 URI；故对其进行以下解析
+     *
+     * @param data intent 所携带的 信息
+     */
+    @TargetApi(19)
+    private void handleImageOnKitKat(Intent data) {
+        String imagePath = null;
+        Uri uri = data.getData();
+        if (DocumentsContract.isDocumentUri(this, uri)) {
+            String docId = DocumentsContract.getDocumentId(uri);
+            if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                String id = docId.split(":")[1];
+                String selection = MediaStore.Images.Media._ID + "=" + id;
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+                Uri contenUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
+                imagePath = getImagePath(contenUri, null);
+            }
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            imagePath = getImagePath(uri, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            imagePath = uri.getPath();
+        }
+        displayImage(imagePath);
+        Log.i("TAG", "handleImageOnKitKat > 1:  + imagePath" + imagePath);
+    }
 
-            String pathResult = getPath(selectedImage);
+    private void handleImageBeforeKitKat(Intent data) {
+        Uri uri = data.getData();
+        String imagePath = getImagePath(uri, null);
+        displayImage(imagePath);
+    }
+
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
+    }
+
+    private void displayImage(String imagePath) {
+        if (imagePath != null) {
             //存储--->内存
-            Bitmap decodeFile = BitmapFactory.decodeFile(pathResult);
+            Bitmap decodeFile = BitmapFactory.decodeFile(imagePath);
             Bitmap zoomBitmap = BitmapUtils.zoom(decodeFile, ivUserIcon.getWidth(), ivUserIcon.getHeight());
             //bitmap圆形裁剪
             Bitmap circleImage = BitmapUtils.circleBitmap(zoomBitmap);
-
             //加载显示
             ivUserIcon.setImageBitmap(circleImage);
             //上传到服务器（省略）
 
             //保存到本地
             saveImage(circleImage);
+        } else {
+            Toast.makeText(this, "Failed to get image", Toast.LENGTH_SHORT).show();
         }
     }
     //将Bitmap保存到本地的操作
@@ -198,7 +294,8 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
      */
     private void saveImage(Bitmap bitmap) {
         File filesDir;
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {//判断sd卡是否挂载
+        //判断sd卡是否挂载
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             //路径1：storage/sdcard/Android/data/包名/files
             filesDir = this.getExternalFilesDir("");
 
@@ -224,111 +321,5 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 }
             }
         }
-    }
-
-    /**
-     * 根据系统相册选择的文件获取路径
-     */
-    @SuppressLint("NewApi")
-    private String getPath(Uri uri) {
-        int sdkVersion = Build.VERSION.SDK_INT;
-        //高于4.4.2的版本
-        if (sdkVersion >= 19) {
-            Log.e("TAG", "uri auth: " + uri.getAuthority());
-            if (isExternalStorageDocument(uri)) {
-                String docId = DocumentsContract.getDocumentId(uri);
-                String[] split = docId.split(":");
-                String type = split[0];
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-            } else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),
-                        Long.valueOf(id));
-                return getDataColumn(this, contentUri, null, null);
-            } else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{split[1]};
-                return getDataColumn(this, contentUri, selection, selectionArgs);
-            } else if (isMedia(uri)) {
-                String[] proj = {MediaStore.Images.Media.DATA};
-                Cursor actualimagecursor = this.managedQuery(uri, proj, null, null, null);
-                int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                actualimagecursor.moveToFirst();
-                return actualimagecursor.getString(actual_image_column_index);
-            }
-
-
-        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            // Return the remote address
-            if (isGooglePhotosUri(uri)) {
-                return uri.getLastPathSegment();
-            }
-            return getDataColumn(this, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-        return null;
-    }
-
-    /**
-     * uri路径查询字段
-     */
-    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {column};
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return null;
-    }
-
-
-    private boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    public static boolean isMedia(Uri uri) {
-        return "media".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is Google Photos.
-     */
-    public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 }

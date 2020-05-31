@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.p2pinvest"
-        minSdkVersion 14
+        minSdkVersion   14
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -37,4 +37,23 @@ dependencies {
     implementation files('libs/alipaysdk.jar')
     implementation files('libs/alipaysecsdk.jar')
     implementation files('libs/alipayutdid.jar')
+    implementation project(path: ':MPChartLib')
+    implementation project(path: ':GestureLock')
+    implementation files('libs/MobCommons-2016.1107.1809.jar')
+    implementation files('libs/MobTools-2016.1107.1809.jar')
+    implementation files('libs/ShareSDK-Alipay-2.7.10.jar')
+    implementation files('libs/ShareSDK-Alipay-Core-2.7.10.jar')
+    implementation files('libs/ShareSDK-Alipay-Moments-2.7.10.jar')
+    implementation files('libs/ShareSDK-Core-2.7.10.jar')
+    implementation files('libs/ShareSDK-Evernote-2.7.10.jar')
+    implementation files('libs/ShareSDK-QQ-2.7.10.jar')
+    implementation files('libs/ShareSDK-QZone-2.7.10.jar')
+    implementation files('libs/ShareSDK-Renren-2.7.10.jar')
+    implementation files('libs/ShareSDK-ShortMessage-2.7.10.jar')
+    implementation files('libs/ShareSDK-SinaWeibo-2.7.10.jar')
+    implementation files('libs/ShareSDK-TencentWeibo-2.7.10.jar')
+    implementation files('libs/ShareSDK-Wechat-2.7.10.jar')
+    implementation files('libs/ShareSDK-Wechat-Core-2.7.10.jar')
+    implementation files('libs/ShareSDK-Wechat-Favorite-2.7.10.jar')
+    implementation files('libs/ShareSDK-Wechat-Moments-2.7.10.jar')
 }

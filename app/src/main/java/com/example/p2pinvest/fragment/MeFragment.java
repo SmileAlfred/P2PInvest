@@ -15,8 +15,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.p2pinvest.R;
+import com.example.p2pinvest.activity.BarChartActivity;
 import com.example.p2pinvest.activity.ChongZhiActivity;
+import com.example.p2pinvest.activity.GestureVerifyActivity;
+import com.example.p2pinvest.activity.LineChartActivity;
 import com.example.p2pinvest.activity.LoginActivity;
+import com.example.p2pinvest.activity.PieChartActivity;
+import com.example.p2pinvest.activity.TiXianActivity;
 import com.example.p2pinvest.activity.UserInfoActivity;
 import com.example.p2pinvest.bean.User;
 import com.example.p2pinvest.common.BaseActivity;
@@ -57,6 +62,32 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
+    protected void initData(String content) {
+        /**
+         * 将矩形头像改成圆形
+         */
+        //压缩处理：长方形变正方形
+        Bitmap bmMeIcon = ((BitmapDrawable) ivMeIcon.getDrawable()).getBitmap();
+        Bitmap bitmap = BitmapUtils.zoom(bmMeIcon, UIUtils.dp2px(62), UIUtils.dp2px(62));
+        //圆形处理：正方形变圆形
+        bitmap = BitmapUtils.circleBitmap(bitmap);
+        ivMeIcon.setImageBitmap(bitmap);
+        //回收bitmap资源
+        //bmMeIcon.recycle();
+
+        //判断用户是否已经登录
+        isLogin();
+
+        //判断一下，是否开启了手势密码。如果开启：先输入手势密码
+        SharedPreferences sp = this.getActivity().getSharedPreferences("secret_protect", Context.MODE_PRIVATE);
+        boolean isOpen = sp.getBoolean("isOpen", false);
+        if(isOpen){
+            ((BaseActivity)this.getActivity()).goToActivity(GestureVerifyActivity.class,null);
+            return;
+        }
+    }
+
+    @Override
     protected RequestParams getParams() {
         return null;
     }
@@ -84,6 +115,11 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
 
         ivTitleSetting.setOnClickListener(this);
         recharge.setOnClickListener(this);
+        withdraw.setOnClickListener(this);
+
+        llTouzi.setOnClickListener(this);
+        llTouziZhiguan.setOnClickListener(this);
+        llZichan.setOnClickListener(this);
     }
 
     @Override
@@ -102,57 +138,50 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.recharge:
                 //设置“充值”操作
-                ((BaseActivity)this.getActivity()).goToActivity(ChongZhiActivity.class,null);
+                ((BaseActivity) this.getActivity()).goToActivity(ChongZhiActivity.class, null);
                 break;
             case R.id.withdraw:
+                ((BaseActivity) this.getActivity()).goToActivity(TiXianActivity.class, null);
+                break;
+            case R.id.ll_touzi:
+                ((BaseActivity) this.getActivity()).goToActivity(LineChartActivity.class, null);
+                break;
+            case R.id.ll_touzi_zhiguan:
+                ((BaseActivity) this.getActivity()).goToActivity(BarChartActivity.class, null);
+                break;
+            case R.id.ll_zichan:
+                ((BaseActivity) this.getActivity()).goToActivity(PieChartActivity.class, null);
                 break;
             default:
                 break;
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        //读取本地保存的图片
+        //读取本地保存的图片;注意这里的生命周期
         readImage();
     }
 
     private boolean readImage() {
         File filesDir;
-        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){//判断sd卡是否挂载
+        //判断sd卡是否挂载
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             //路径1：storage/sdcard/Android/data/包名/files
             filesDir = this.getActivity().getExternalFilesDir("");
-        }else{//手机内部存储
+        } else {//手机内部存储
             //路径：data/data/包名/files
             filesDir = this.getActivity().getFilesDir();
         }
-        File file = new File(filesDir,"icon.png");
-        if(file.exists()){
+        File file = new File(filesDir, "icon.png");
+        if (file.exists()) {
             //存储--->内存
             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             ivMeIcon.setImageBitmap(bitmap);
             return true;
         }
         return false;
-
-    }
-
-    @Override
-    protected void initData(String content) {
-        /**
-         * 将矩形头像改成圆形
-         */
-        //压缩处理：长方形变正方形
-        Bitmap bmMeIcon = ((BitmapDrawable) ivMeIcon.getDrawable()).getBitmap();
-        Bitmap bitmap = BitmapUtils.zoom(bmMeIcon, UIUtils.dp2px(62), UIUtils.dp2px(62));
-        //圆形处理：正方形变圆形
-        bitmap = BitmapUtils.circleBitmap(bitmap);
-        ivMeIcon.setImageBitmap(bitmap);
-        //回收bitmap资源
-        bmMeIcon.recycle();
-
-        //判断用户是否已经登录
-        isLogin();
     }
 
     private void isLogin() {
@@ -175,6 +204,12 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
         User user = ((BaseActivity) this.getActivity()).readUser();
         //2.获取对象信息，并设置给相应的视图显示。
         tvMeName.setText(user.getName());
+
+        //判断本地是否已经保存头像的图片，如果有，则不再执行联网操作
+        boolean isExist = readImage();
+        if (isExist) {
+            return;
+        }
         /**
          * Picasso.get().load() 之后加上transform()，将头像设置为圆形，并通过into加载到imageview
          */
@@ -182,7 +217,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
             @Override
             public Bitmap transform(Bitmap source) {//下载以后的内存中的bitmap对象
                 //压缩处理
-                Bitmap bitmap = BitmapUtils.zoom(source, UIUtils.dp2px(62),UIUtils.dp2px(62));
+                Bitmap bitmap = BitmapUtils.zoom(source, UIUtils.dp2px(62), UIUtils.dp2px(62));
                 //圆形处理
                 bitmap = BitmapUtils.circleBitmap(bitmap);
                 //回收bitmap资源
@@ -211,5 +246,4 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                 .setCancelable(true)
                 .show();
     }
-
 }

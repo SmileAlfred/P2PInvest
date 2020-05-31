@@ -6,7 +6,7 @@ package com.example.p2pinvest.common;
  */
 public class AppNetConfig {
 
-    public static final String IPADDRESS = "192.168.0.7";
+    public static final String IPADDRESS = "192.168.0.3";
     //public static final String IPADDRESS = "localhost";
 
     public static final String BASE_URL = "http://" + IPADDRESS + ":8080/WebRoot/";
